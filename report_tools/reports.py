@@ -2,13 +2,22 @@ from copy import deepcopy
 
 from django.db import models
 from django.utils.datastructures import SortedDict
-from django.utils.encoding import StrAndUnicode
+from django.utils.encoding import force_text, python_2_unicode_compatible
 from django.utils.safestring import mark_safe
 
 from .charts import Chart
 
 __all__ = ('BaseReport', 'Report')
 
+try:
+    from django.utils.encoding import StrAndUnicode
+except ImportError:
+    from django.utils.encoding import python_2_unicode_compatible
+
+    @python_2_unicode_compatible
+    class StrAndUnicode(object):
+        def __str__(self):
+            return self.CodeType
 
 def pretty_name(name):
     """Converts 'first_name' to 'First name'"""
